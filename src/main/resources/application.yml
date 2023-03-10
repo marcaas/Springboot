@@ -1,0 +1,19 @@
+## 应用名称
+spring:
+#  application:
+#    name: Springboot
+# 数据库驱动：
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+# 数据源名称
+    name: defaultDataSource
+# 数据库连接地址
+    url: jdbc:mysql://localhost:3306/test?serverTimezone=GMT%2b8
+# 数据库用户名&密码：
+    username: root
+    password: 78963
+# 应用服务 WEB 访问端口
+server:
+  port: 9090
+mybatis:
+  mapper-locations: classpath:mapper/*.xml #扫描所有mybatis文件
