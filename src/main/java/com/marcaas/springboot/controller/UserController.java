@@ -55,10 +55,20 @@ public class UserController {
     @GetMapping("/page")
     public IPage<User> findPage(@RequestParam Integer pageNum,
                                 @RequestParam Integer pageSize,
-                                @RequestParam String username) {
+                                @RequestParam(defaultValue = "") String username,
+                                @RequestParam(defaultValue = "") String email,
+                                @RequestParam(defaultValue = "") String address) {
         IPage<User> page = new Page<>(pageNum, pageSize);
         QueryWrapper<User>queryWrapper = new QueryWrapper<>();
-        queryWrapper.like("username", username);
+        if (!"".equals(username)) {
+            queryWrapper.like("username", username);
+        }
+        if (!"".equals(email)) {
+            queryWrapper.like("email", email);
+        }
+        if (!"".equals(address)) {
+            queryWrapper.like("address", address);
+        }
         return userService.page(page, queryWrapper);
     }
 

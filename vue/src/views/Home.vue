@@ -85,17 +85,20 @@
 
         <el-main>
           <div style="margin: 10px 0;">
-            <el-input style="width: 200px;" suffix-icon="el-icon-search" placeholder="请输入名称"></el-input>
-            <el-input style="width: 200px;" suffix-icon="el-icon-search" placeholder="请输入时间" class="ml-5"></el-input>
-            <el-input style="width: 200px;" suffix-icon="el-icon-search" placeholder="请输入地址" class="ml-5"></el-input>
-            <el-button class="ml-5" type="primary">搜索</el-button>
-            <el-button type="danger" style="float: right;">删除</el-button>
-            <el-button type="primary" style="float: right;">导出</el-button>
-            <el-button type="primary" style="float: right;">导入</el-button>
-            <el-button type="primary" style="float: right;">新增</el-button>
+            <el-input style="width: 200px;" suffix-icon="el-icon-search" placeholder="请输入名称" v-model="username"></el-input>
+            <el-input style="width: 200px;" suffix-icon="el-icon-search" placeholder="请输入邮箱" v-model="email" class="ml-5"></el-input>
+            <el-input style="width: 200px;" suffix-icon="el-icon-search" placeholder="请输入地址" v-model="address" class="ml-5"></el-input>
+            <el-button class="ml-5" type="primary" @click="load">搜索</el-button>
           </div>
 
-          <el-table :data="tableData" border stripe>
+          <div style="margin: 10px 0;">
+            <el-button type="primary">新增<i class="el-icon-circle-plus-outline"></i></el-button>
+            <el-button type="danger">批量删除<i class="el-icon-remove-outline"></i></el-button>
+            <el-button type="primary">导入<i class="el-icon-bottom"></i></el-button>
+            <el-button type="primary">导出<i class="el-icon-top"></i></el-button>
+          </div>
+
+          <el-table :data="tableData" border stripe :header-cell-class-name="headerBg">
             <el-table-column prop="id" label="ID" width="80"></el-table-column>
             <el-table-column prop="username" label="用户名" width="140"></el-table-column>
             <el-table-column prop="nickname" label="昵称" width="120"></el-table-column>
@@ -124,6 +127,7 @@
 <script>
 // @ is an alias to /src
 import HelloWorld from '@/components/HelloWorld.vue'
+import request from "@/utils/request";
 
 export default {
   name: 'Home',
@@ -132,10 +136,15 @@ export default {
       tableData: [],
       total: 0,
       pageNum: 1,
-      pageSize: 15,
+      pageSize: 10,
+      username: "",
+      email: "",
+      address: "",
       collapseBtnClass: 'el-icon-s-fold',
       isCollapse: false,
-      sideWidth: 200
+      sideWidth: 200,
+      logoTextShow: true,
+      headerBg: 'headerBg'
     }
   },
   created() {
@@ -147,20 +156,39 @@ export default {
       this.isCollapse = !this.isCollapse
       if (this.isCollapse) {
         this.sideWidth = 64
+        this.collapseBtnClass = 'el-icon-s-unfold'
+        this.logoTextShow = false
+      }
+      else {
+        this.sideWidth = 200
+        this.collapseBtnClass = 'el-icon-s-fold'
+        this.logoTextShow = true
       }
     },
     load() {
-      fetch("http://localhost:9090/user/page?pageNum=" + this.pageNum + "&pageSize=" + this.pageSize).then(res => res.json()).then(res => {
-      console.log(res)
-      this.tableData = res.data
-      this.total = res.total
-    })
+      request.get("http://localhost:9090/user/page", {
+        params: {
+          pageNum: this.pageNum,
+          pageSize: this.pageSize,
+          username: this.username,
+          email: this.email,
+          address: this.address
+        }
+      }).then(res => {
+        console.log(res)
+
+        this.tableData = res.records
+        this.total = res.total
+
+      })
     },
     handleSizeChange(pageSize) {
+      console.log(pageSize)
       this.pageSize = pageSize
       this.load()
     },
     handleCurrentChange(pageNum) {
+      console.log(pageNum)
       this.pageNum = pageNum
       this.load()
     }
