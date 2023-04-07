@@ -182,7 +182,7 @@
 <script>
 // @ is an alias to /src
 import HelloWorld from '@/components/HelloWorld.vue'
-import request from "@/utils/request";
+// import request from "@/utils/request";
 
 export default {
   name: 'Home',
@@ -223,7 +223,7 @@ export default {
       }
     },
     load() {
-      request.get("/user/page", {
+      this.request.get("/user/page", {
         params: {
           pageNum: this.pageNum,
           pageSize: this.pageSize,
@@ -240,7 +240,7 @@ export default {
       })
     },
     save() {
-      request.post("/user", this.form).then(res => {
+      this.request.post("/user", this.form).then(res => {
         if (res) {
           this.$message.success("保存成功")
           this.load()
@@ -259,7 +259,7 @@ export default {
       this.dialogFormVisible = true
     },
     del(id) {
-      request.delete("/user/" + id).then(res => {
+      this.request.delete("/user/" + id).then(res => {
         if (res) {
           this.$message.success("删除成功")
           this.load()
@@ -274,7 +274,7 @@ export default {
     },
     delBatch() {
       let ids = this.multipleSelection.map(v => v.id) // [{}, {}, {}] => [1, 2, 3]
-      request.post("/user/del/batch", ids).then(res => {
+      this.request.post("/user/del/batch", ids).then(res => {
         if (res) {
           this.$message.success("批量删除成功")
           this.load()

@@ -10,7 +10,7 @@ Vue.config.productionTip = false
 
 Vue.use(ElementUI, { size: "big" });
 
-Vue.prototype.axios=request
+Vue.prototype.request=request
 
 new Vue({
   router,
